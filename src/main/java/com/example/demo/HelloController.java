@@ -1,12 +1,17 @@
 package com.example.demo;
 
 import com.example.demo.entities.User;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.example.demo.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 public class HelloController {
+
+    @Autowired
+    private UserService userService;
 
     @RequestMapping("/")
     public String hello() {
@@ -15,6 +20,16 @@ public class HelloController {
 
     @GetMapping("/user")
     public User getOneUser() {
-        return new User(1,"doanpt","doandeptrai", "admin");
+        return new User(1, "doanpt", "doandeptrai", "admin");
+    }
+
+    @GetMapping("/user/all")
+    public List<User> getAllUser() {
+        return userService.findAllUser();
+    }
+
+    @PostMapping("/add")
+    public int addUser(@RequestBody User user) {
+        return userService.addUser(user);
     }
 }
