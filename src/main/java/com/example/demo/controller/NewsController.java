@@ -19,6 +19,11 @@ public class NewsController {
         return newsService.findAllNews();
     }
 
+    @GetMapping("/one/{title}")
+    public News getNews(@PathVariable String title) {
+        return newsService.findNewsByTitle(title);
+    }
+
     @PostMapping("/add")
     public News addNews(@RequestBody News news) {
         return newsService.addNews(news);

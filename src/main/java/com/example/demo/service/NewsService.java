@@ -27,4 +27,9 @@ public class NewsService {
     public void deleteNews(int id) {
         newsRepository.deleteById(id);
     }
+
+    public News findNewsByTitle(String title) {
+        return newsRepository.findNewsByTitle(title);
+    }
+
 }
