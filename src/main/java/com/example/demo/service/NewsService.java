@@ -32,4 +32,7 @@ public class NewsService {
         return newsRepository.findNewsByTitle(title);
     }
 
+    public News getOneByTitle(String title) {
+        return newsRepository.findByTitle(title);
+    }
 }
