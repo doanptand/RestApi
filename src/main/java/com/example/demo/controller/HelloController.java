@@ -18,7 +18,7 @@ public class HelloController {
         return "Welcome to Spring";
     }
 
-    @GetMapping("/user")
+    @GetMapping("/test")
     public User getOneUser() {
         return new User(1, "doanpt", "doandeptrai", "admin");
     }
