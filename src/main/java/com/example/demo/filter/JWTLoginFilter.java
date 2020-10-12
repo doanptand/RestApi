@@ -1,6 +1,7 @@
 package com.example.demo.filter;
 
 import com.example.demo.entities.User;
+import com.example.demo.service.TokenAuthenticationService;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -36,7 +37,6 @@ public class JWTLoginFilter extends AbstractAuthenticationProcessingFilter {
 
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
-        response.addHeader("Authorization", "success");
-        //super.successfulAuthentication(request, response, chain, authResult);
+        TokenAuthenticationService.addAuthentication(response, authResult.getName());
     }
 }
