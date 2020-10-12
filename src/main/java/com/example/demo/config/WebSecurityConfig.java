@@ -2,18 +2,23 @@ package com.example.demo.config;
 
 import com.example.demo.filter.JWTAuthenticationFilter;
 import com.example.demo.filter.JWTLoginFilter;
-import org.springframework.context.annotation.Bean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import javax.sql.DataSource;
 
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+    @Autowired
+    private DataSource dataSource;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -37,9 +42,20 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        //FIXME remove it. only for test.. we generate password with encoded to save it to database
+        System.out.println("pass:" + new BCryptPasswordEncoder().encode("doandeptrai"));
+        System.out.println("pass:" + new BCryptPasswordEncoder().encode("thiepxinhgai"));
+
+
         //super.configure(auth);
-        //do authenticate
-        auth.inMemoryAuthentication().withUser("doanpt").password("{noop}doanpt").roles("admin");
+        //do authenticate in memory
+        //auth.inMemoryAuthentication().withUser("doanpt").password("{noop}doanpt").roles("admin");
+        //do authen with database
+        auth.jdbcAuthentication().dataSource(dataSource)
+                //FIXME create column named "enabled" in user table mysql
+                .usersByUsernameQuery("select username,password, enabled from user where  username=?")
+                .authoritiesByUsernameQuery("select username,rule from user where username=?")
+        .passwordEncoder(new BCryptPasswordEncoder());
     }
 
 }
